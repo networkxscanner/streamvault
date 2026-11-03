@@ -18,7 +18,7 @@
             overflow-x: hidden;
         }
 
-        /* Live Animated Anime Background */
+        /* Live Animated Background */
         .live-bg {
             position: fixed;
             top: 0;
@@ -36,7 +36,7 @@
             transform: translate(-50%, -50%);
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(229,9,20,0.15) 0%, rgba(0,0,0,0) 70%);
+            background: radial-gradient(circle, rgba(229,9,20,0.2) 0%, rgba(0,0,0,0) 70%);
             border-radius: 50%;
             z-index: -1;
             animation: pulse 6s infinite alternate ease-in-out;
@@ -47,7 +47,7 @@
             100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
         }
 
-        /* Interesting Loading Screen */
+        /* Loading Screen with Name */
         #loader {
             position: fixed;
             width: 100%;
@@ -77,6 +77,13 @@
             color: #e50914;
             font-weight: bold;
             animation: blink 1.2s infinite;
+        }
+
+        .loader-creator {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #888;
+            letter-spacing: 1px;
         }
 
         @keyframes spin {
@@ -203,7 +210,7 @@
             font-weight: 500;
         }
 
-        /* Video Modal Styles */
+        /* Coming Soon Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -212,45 +219,54 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.92);
+            background-color: rgba(0,0,0,0.85);
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
             position: relative;
-            width: 90%;
-            max-width: 850px;
-            background: #111;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+            width: 85%;
+            max-width: 450px;
+            background: #181818;
+            border: 2px solid #e50914;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(229, 9, 20, 0.6);
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .close-btn {
             position: absolute;
             top: 10px;
-            right: 18px;
+            right: 15px;
             color: #fff;
-            font-size: 30px;
+            font-size: 26px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 1001;
         }
 
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
+        .close-btn:hover {
+            color: #e50914;
         }
 
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
+        .modal-content h3 {
+            color: #e50914;
+            font-size: 28px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .modal-content p {
+            color: #ccc;
+            font-size: 15px;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -260,6 +276,7 @@
     <div id="loader">
         <div class="anime-spinner"></div>
         <div class="loading-text">LOADING STREAMVAULT...</div>
+        <div class="loader-creator">Created by Noor ul Hassan</div>
     </div>
 
     <!-- Animated Background -->
@@ -280,7 +297,7 @@
         <h2>Trending Anime & Dramas</h2>
         <div class="grid" id="cardGrid">
             <!-- Card 1 -->
-            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+            <div class="card" onclick="openComingSoon('Dark Fantasy Anime')">
                 <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" alt="Anime">
                 <div class="card-info">
                     <h3 class="title">Dark Fantasy Anime</h3>
@@ -288,7 +305,7 @@
                 </div>
             </div>
             <!-- Card 2 -->
-            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+            <div class="card" onclick="openComingSoon('Cyberpunk Chronicles')">
                 <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" alt="Drama">
                 <div class="card-info">
                     <h3 class="title">Cyberpunk Chronicles</h3>
@@ -296,7 +313,7 @@
                 </div>
             </div>
             <!-- Card 3 -->
-            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+            <div class="card" onclick="openComingSoon('Lofi Night Vibes')">
                 <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500" alt="Anime">
                 <div class="card-info">
                     <h3 class="title">Lofi Night Vibes</h3>
@@ -304,7 +321,7 @@
                 </div>
             </div>
             <!-- Card 4 -->
-            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+            <div class="card" onclick="openComingSoon('Mysterious Detective Drama')">
                 <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=500" alt="Drama">
                 <div class="card-info">
                     <h3 class="title">Mysterious Detective Drama</h3>
@@ -314,18 +331,18 @@
         </div>
     </div>
 
-    <!-- Video Popup Modal -->
-    <div id="videoModal" class="modal">
+    <!-- Coming Soon Modal -->
+    <div id="comingSoonModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closePlayer()">&times;</span>
-            <div class="video-container">
-                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
-            </div>
+            <span class="close-btn" onclick="closeComingSoon()">&times;</span>
+            <h3 id="modalMediaTitle">Coming Soon</h3>
+            <p>🎬 Yeh title jald hi StreamVault par available hoga!</p>
+            <p style="font-size: 12px; color: #777; margin-top: 15px;">Stay tuned for full episodes.</p>
         </div>
     </div>
 
     <script>
-        // Loading animation hide after 1.8 seconds
+        // Loading screen
         window.addEventListener('load', function() {
             setTimeout(function() {
                 var loader = document.getElementById('loader');
@@ -336,6 +353,7 @@
             }, 1800);
         });
 
+        // Search Filter
         function filterCards() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('card');
@@ -350,14 +368,14 @@
             }
         }
 
-        function openPlayer(videoUrl) {
-            document.getElementById('videoPlayer').src = videoUrl + "?autoplay=1";
-            document.getElementById('videoModal').style.display = "flex";
+        // Coming Soon Popup
+        function openComingSoon(title) {
+            document.getElementById('modalMediaTitle').innerText = title;
+            document.getElementById('comingSoonModal').style.display = "flex";
         }
 
-        function closePlayer() {
-            document.getElementById('videoPlayer').src = "";
-            document.getElementById('videoModal').style.display = "none";
+        function closeComingSoon() {
+            document.getElementById('comingSoonModal').style.display = "none";
         }
     </script>
 
