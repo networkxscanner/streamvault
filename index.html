@@ -100,7 +100,7 @@
         header {
             background-color: rgba(26, 26, 26, 0.85);
             backdrop-filter: blur(10px);
-            padding: 25px 20px;
+            padding: 20px;
             text-align: center;
             border-bottom: 2px solid #e50914;
             position: sticky;
@@ -110,7 +110,7 @@
 
         .creator-tag {
             color: #e50914;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             letter-spacing: 1px;
             margin-bottom: 5px;
@@ -120,7 +120,7 @@
         header h1 {
             margin: 0;
             color: #ffffff;
-            font-size: 32px;
+            font-size: 28px;
             letter-spacing: 2px;
         }
 
@@ -131,8 +131,8 @@
         .search-container input {
             width: 85%;
             max-width: 450px;
-            padding: 12px 20px;
-            font-size: 15px;
+            padding: 10px 20px;
+            font-size: 14px;
             border-radius: 25px;
             border: 1px solid #333;
             background-color: rgba(37, 37, 37, 0.9);
@@ -146,18 +146,120 @@
             box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
         }
 
+        /* Category Filter Tabs */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: rgba(40, 40, 40, 0.8);
+            color: #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: #e50914;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(229, 9, 20, 0.6);
+            border-color: #e50914;
+        }
+
+        /* Main Container */
         .container {
             padding: 30px 20px;
             max-width: 1200px;
             margin: auto;
         }
 
-        h2 {
+        /* Hero Featured Banner */
+        .hero-banner {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 35px;
+            background: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200') center/cover no-repeat;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(11,12,16,0.95) 0%, rgba(11,12,16,0.5) 60%, rgba(0,0,0,0) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .badge-trending {
+            background: #e50914;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 4px;
+            width: fit-content;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .hero-overlay h2 {
+            font-size: 28px;
+            color: #fff;
+            border: none;
+            padding: 0;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.7);
+        }
+
+        .hero-overlay p {
+            color: #ccc;
+            font-size: 13px;
+            max-width: 450px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .hero-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            width: fit-content;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.5);
+        }
+
+        .hero-btn:hover {
+            transform: scale(1.05);
+            background: #ff1e27;
+        }
+
+        h3.section-title {
             border-left: 4px solid #e50914;
             padding-left: 12px;
-            margin-top: 20px;
+            margin-top: 10px;
             color: #f1f1f1;
-            font-size: 22px;
+            font-size: 20px;
         }
 
         .grid {
@@ -176,6 +278,7 @@
             cursor: pointer;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
         }
 
         .card:hover {
@@ -184,9 +287,22 @@
             border-color: rgba(229, 9, 20, 0.5);
         }
 
+        .card-rating {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.75);
+            color: #ffc107;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+        }
+
         .card img {
             width: 100%;
-            height: 300px;
+            height: 290px;
             object-fit: cover;
         }
 
@@ -195,14 +311,14 @@
             text-align: center;
         }
 
-        .card-info h3 {
+        .card-info h4 {
             margin: 0 0 8px 0;
-            font-size: 16px;
+            font-size: 15px;
             color: #fff;
         }
 
         .card-info span {
-            font-size: 12px;
+            font-size: 11px;
             color: #ccc;
             background: #e50914;
             padding: 4px 10px;
@@ -258,14 +374,14 @@
 
         .modal-content h3 {
             color: #e50914;
-            font-size: 28px;
+            font-size: 26px;
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
 
         .modal-content p {
             color: #ccc;
-            font-size: 15px;
+            font-size: 14px;
             margin-top: 5px;
         }
     </style>
@@ -286,46 +402,80 @@
     <header>
         <div class="creator-tag">Created by Noor ul Hassan</div>
         <h1>STREAMVAULT</h1>
-        <p style="margin: 5px 0 0; color: #aaa; font-size: 14px;">Your Ultimate Movies, Anime & Drama Hub</p>
+        <p style="margin: 3px 0 0; color: #aaa; font-size: 13px;">Your Ultimate Movies, Anime & Drama Hub</p>
         
         <div class="search-container">
-            <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Search anime, drama or movies...">
+            <input type="text" id="searchInput" onkeyup="filterContent()" placeholder="Search anime, drama or movies...">
+        </div>
+
+        <div class="category-tabs">
+            <button class="tab-btn active" onclick="filterCategory('all', this)">All</button>
+            <button class="tab-btn" onclick="filterCategory('anime', this)">Anime</button>
+            <button class="tab-btn" onclick="filterCategory('drama', this)">Dramas</button>
+            <button class="tab-btn" onclick="filterCategory('movie', this)">Movies</button>
         </div>
     </header>
 
     <div class="container">
-        <h2>Trending Anime & Dramas</h2>
+        <!-- Featured Hero Banner -->
+        <div class="hero-banner">
+            <div class="hero-overlay">
+                <div class="badge-trending">FEATURED SHOW</div>
+                <h2>Cyberpunk Chronicles</h2>
+                <p>Enter a futuristic dark city filled with mystery, action, and high-tech adventures.</p>
+                <button class="hero-btn" onclick="openComingSoon('Cyberpunk Chronicles')">Watch Trailer</button>
+            </div>
+        </div>
+
+        <h3 class="section-title">Trending Content</h3>
         <div class="grid" id="cardGrid">
             <!-- Card 1 -->
-            <div class="card" onclick="openComingSoon('Dark Fantasy Anime')">
+            <div class="card" data-category="anime" onclick="openComingSoon('Dark Fantasy Anime')">
+                <div class="card-rating">⭐ 4.9</div>
                 <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" alt="Anime">
                 <div class="card-info">
-                    <h3 class="title">Dark Fantasy Anime</h3>
-                    <span>Action / Mystery</span>
+                    <h4 class="title">Dark Fantasy Anime</h4>
+                    <span>Anime / Action</span>
                 </div>
             </div>
+
             <!-- Card 2 -->
-            <div class="card" onclick="openComingSoon('Cyberpunk Chronicles')">
+            <div class="card" data-category="drama" onclick="openComingSoon('Cyberpunk Chronicles')">
+                <div class="card-rating">⭐ 4.8</div>
                 <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" alt="Drama">
                 <div class="card-info">
-                    <h3 class="title">Cyberpunk Chronicles</h3>
-                    <span>Sci-Fi / Thriller</span>
+                    <h4 class="title">Cyberpunk Chronicles</h4>
+                    <span>Drama / Sci-Fi</span>
                 </div>
             </div>
+
             <!-- Card 3 -->
-            <div class="card" onclick="openComingSoon('Lofi Night Vibes')">
+            <div class="card" data-category="anime" onclick="openComingSoon('Lofi Night Vibes')">
+                <div class="card-rating">⭐ 4.7</div>
                 <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500" alt="Anime">
                 <div class="card-info">
-                    <h3 class="title">Lofi Night Vibes</h3>
-                    <span>Aesthetic / Drama</span>
+                    <h4 class="title">Lofi Night Vibes</h4>
+                    <span>Anime / Slice of Life</span>
                 </div>
             </div>
+
             <!-- Card 4 -->
-            <div class="card" onclick="openComingSoon('Mysterious Detective Drama')">
+            <div class="card" data-category="drama" onclick="openComingSoon('Mysterious Detective Drama')">
+                <div class="card-rating">⭐ 4.9</div>
                 <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=500" alt="Drama">
                 <div class="card-info">
-                    <h3 class="title">Mysterious Detective Drama</h3>
-                    <span>Crime / Mystery</span>
+                    <h4 class="title">Mysterious Detective Drama</h4>
+                    <span>Drama / Mystery</span>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="card" data-category="movie" onclick="openComingSoon('Neon City Nights')">
+                <div class="card-rating">⭐ 4.6</div>
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500" alt="Movie">
+                <div class="card-info">
+                    <h4 class="title">Neon City Nights</h4>
+                    <span>Movie / Thriller</span>
                 </div>
             </div>
         </div>
@@ -342,6 +492,8 @@
     </div>
 
     <script>
+        let currentCategory = 'all';
+
         // Loading screen
         window.addEventListener('load', function() {
             setTimeout(function() {
@@ -353,19 +505,35 @@
             }, 1800);
         });
 
-        // Search Filter
-        function filterCards() {
+        // Combined Filter (Search + Category)
+        function filterContent() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('card');
 
             for (let i = 0; i < cards.length; i++) {
                 let title = cards[i].getElementsByClassName('title')[0].innerText.toLowerCase();
-                if (title.includes(input)) {
+                let category = cards[i].getAttribute('data-category');
+
+                let matchesSearch = title.includes(input);
+                let matchesCategory = (currentCategory === 'all' || category === currentCategory);
+
+                if (matchesSearch && matchesCategory) {
                     cards[i].style.display = "";
                 } else {
                     cards[i].style.display = "none";
                 }
             }
+        }
+
+        // Tab Category Switching
+        function filterCategory(cat, btn) {
+            currentCategory = cat;
+            let buttons = document.getElementsByClassName('tab-btn');
+            for (let b of buttons) {
+                b.classList.remove('active');
+            }
+            btn.classList.add('active');
+            filterContent();
         }
 
         // Coming Soon Popup
