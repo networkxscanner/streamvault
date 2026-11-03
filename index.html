@@ -5,144 +5,337 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreamVault - Movies & Anime</title>
     <style>
-        body {
-            background-color: #0f0f0f;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
+        body {
+            background-color: #0b0c10;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Live Animated Anime Background */
+        .live-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0d0221 0%, #0f0c20 50%, #190a05 100%);
+            z-index: -2;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(229,9,20,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: pulse 6s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+        }
+
+        /* Interesting Loading Screen */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: #0b0c10;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .anime-spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(225, 9, 20, 0.2);
+            border-top: 5px solid #e50914;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            letter-spacing: 3px;
+            color: #e50914;
+            font-weight: bold;
+            animation: blink 1.2s infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Header & Content Styling */
         header {
-            background-color: #1a1a1a;
-            padding: 20px;
+            background-color: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 25px 20px;
             text-align: center;
             border-bottom: 2px solid #e50914;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
+
         .creator-tag {
             color: #e50914;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
             margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
         }
+
         header h1 {
             margin: 0;
             color: #ffffff;
-            font-size: 28px;
-            letter-spacing: 1px;
+            font-size: 32px;
+            letter-spacing: 2px;
         }
+
         .search-container {
             margin-top: 15px;
         }
+
         .search-container input {
-            width: 80%;
-            max-width: 400px;
-            padding: 10px 15px;
+            width: 85%;
+            max-width: 450px;
+            padding: 12px 20px;
             font-size: 15px;
-            border-radius: 20px;
+            border-radius: 25px;
             border: 1px solid #333;
-            background-color: #252525;
+            background-color: rgba(37, 37, 37, 0.9);
             color: white;
             outline: none;
+            transition: all 0.3s;
         }
+
         .search-container input:focus {
             border-color: #e50914;
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
         }
+
         .container {
-            padding: 20px;
+            padding: 30px 20px;
             max-width: 1200px;
             margin: auto;
         }
+
         h2 {
             border-left: 4px solid #e50914;
-            padding-left: 10px;
+            padding-left: 12px;
             margin-top: 20px;
             color: #f1f1f1;
+            font-size: 22px;
         }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
         }
+
         .card {
-            background: #222;
-            border-radius: 8px;
+            background: rgba(34, 34, 34, 0.8);
+            border-radius: 10px;
             overflow: hidden;
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .card:hover {
-            transform: scale(1.05);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
+            border-color: rgba(229, 9, 20, 0.5);
         }
+
         .card img {
             width: 100%;
-            height: 280px;
+            height: 300px;
             object-fit: cover;
         }
+
         .card-info {
-            padding: 12px;
+            padding: 15px;
             text-align: center;
         }
+
         .card-info h3 {
             margin: 0 0 8px 0;
             font-size: 16px;
             color: #fff;
         }
+
         .card-info span {
             font-size: 12px;
-            color: #aaa;
-            background: #333;
-            padding: 3px 8px;
-            border-radius: 4px;
+            color: #ccc;
+            background: #e50914;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        /* Video Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.92);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 850px;
+            background: #111;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 18px;
+            color: #fff;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
         }
     </style>
 </head>
 <body>
 
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="anime-spinner"></div>
+        <div class="loading-text">LOADING STREAMVAULT...</div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="live-bg"></div>
+    <div class="bg-glow"></div>
+
     <header>
         <div class="creator-tag">Created by Noor ul Hassan</div>
         <h1>STREAMVAULT</h1>
-        <p style="margin: 5px 0 0; color: #888; font-size: 14px;">Your Ultimate Movies & Anime Hub</p>
+        <p style="margin: 5px 0 0; color: #aaa; font-size: 14px;">Your Ultimate Movies, Anime & Drama Hub</p>
         
-        <!-- Search Bar Section -->
         <div class="search-container">
-            <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Search anime or movies...">
+            <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Search anime, drama or movies...">
         </div>
     </header>
 
     <div class="container">
-        <h2>Trending Anime & Movies</h2>
+        <h2>Trending Anime & Dramas</h2>
         <div class="grid" id="cardGrid">
-            <!-- Item 1 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" alt="Anime Poster">
+            <!-- Card 1 -->
+            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" alt="Anime">
                 <div class="card-info">
-                    <h3 class="title">Dark Fantasy Series</h3>
+                    <h3 class="title">Dark Fantasy Anime</h3>
                     <span>Action / Mystery</span>
                 </div>
             </div>
-            <!-- Item 2 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" alt="Movie Poster">
+            <!-- Card 2 -->
+            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+                <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" alt="Drama">
                 <div class="card-info">
                     <h3 class="title">Cyberpunk Chronicles</h3>
                     <span>Sci-Fi / Thriller</span>
                 </div>
             </div>
-            <!-- Item 3 -->
-            <div class="card">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500" alt="Anime Poster">
+            <!-- Card 3 -->
+            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500" alt="Anime">
                 <div class="card-info">
-                    <h3 class="title">Lofi & Night Vibes</h3>
+                    <h3 class="title">Lofi Night Vibes</h3>
                     <span>Aesthetic / Drama</span>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="card" onclick="openPlayer('https://www.youtube.com/embed/g2JmP5h8Rsg')">
+                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=500" alt="Drama">
+                <div class="card-info">
+                    <h3 class="title">Mysterious Detective Drama</h3>
+                    <span>Crime / Mystery</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript for Live Search -->
+    <!-- Video Popup Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePlayer()">&times;</span>
+            <div class="video-container">
+                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Loading animation hide after 1.8 seconds
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                var loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 1800);
+        });
+
         function filterCards() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('card');
@@ -155,6 +348,16 @@
                     cards[i].style.display = "none";
                 }
             }
+        }
+
+        function openPlayer(videoUrl) {
+            document.getElementById('videoPlayer').src = videoUrl + "?autoplay=1";
+            document.getElementById('videoModal').style.display = "flex";
+        }
+
+        function closePlayer() {
+            document.getElementById('videoPlayer').src = "";
+            document.getElementById('videoModal').style.display = "none";
         }
     </script>
 
