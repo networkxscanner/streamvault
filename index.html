@@ -1,551 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamVault - Movies & Anime</title>
+    <title>Stream Vault | Working Media Player</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0b10',
+                            card: '#12141f',
+                            border: '#1f2438',
+                            neon: '#00ffcc',
+                            purple: '#b026ff',
+                            pink: '#ff007f'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: #0b0c10;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* Live Animated Background */
-        .live-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #0d0221 0%, #0f0c20 50%, #190a05 100%);
-            z-index: -2;
-        }
-
-        .bg-glow {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(229,9,20,0.2) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
-            z-index: -1;
-            animation: pulse 6s infinite alternate ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
-        }
-
-        /* Loading Screen with Name */
-        #loader {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: #0b0c10;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease;
-        }
-
-        .anime-spinner {
-            width: 70px;
-            height: 70px;
-            border: 5px solid rgba(225, 9, 20, 0.2);
-            border-top: 5px solid #e50914;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-text {
-            margin-top: 20px;
-            font-size: 18px;
-            letter-spacing: 3px;
-            color: #e50914;
-            font-weight: bold;
-            animation: blink 1.2s infinite;
-        }
-
-        .loader-creator {
-            margin-top: 12px;
-            font-size: 14px;
-            color: #888;
-            letter-spacing: 1px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        /* Header & Content Styling */
-        header {
-            background-color: rgba(26, 26, 26, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 2px solid #e50914;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .creator-tag {
-            color: #e50914;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-        }
-
-        header h1 {
-            margin: 0;
-            color: #ffffff;
-            font-size: 28px;
-            letter-spacing: 2px;
-        }
-
-        .search-container {
-            margin-top: 15px;
-        }
-
-        .search-container input {
-            width: 85%;
-            max-width: 450px;
-            padding: 10px 20px;
-            font-size: 14px;
-            border-radius: 25px;
-            border: 1px solid #333;
-            background-color: rgba(37, 37, 37, 0.9);
-            color: white;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .search-container input:focus {
-            border-color: #e50914;
-            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-        }
-
-        /* Category Filter Tabs */
-        .category-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: rgba(40, 40, 40, 0.8);
-            color: #ccc;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn:hover, .tab-btn.active {
-            background: #e50914;
-            color: #fff;
-            box-shadow: 0 0 12px rgba(229, 9, 20, 0.6);
-            border-color: #e50914;
-        }
-
-        /* Main Container */
-        .container {
-            padding: 30px 20px;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        /* Hero Featured Banner */
-        .hero-banner {
-            position: relative;
-            width: 100%;
-            height: 320px;
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 35px;
-            background: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200') center/cover no-repeat;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(11,12,16,0.95) 0%, rgba(11,12,16,0.5) 60%, rgba(0,0,0,0) 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 30px;
-        }
-
-        .badge-trending {
-            background: #e50914;
-            color: #fff;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 4px;
-            width: fit-content;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .hero-overlay h2 {
-            font-size: 28px;
-            color: #fff;
-            border: none;
-            padding: 0;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.7);
-        }
-
-        .hero-overlay p {
-            color: #ccc;
-            font-size: 13px;
-            max-width: 450px;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .hero-btn {
-            background: #e50914;
-            color: white;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            width: fit-content;
-            transition: 0.3s ease;
-            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.5);
-        }
-
-        .hero-btn:hover {
-            transform: scale(1.05);
-            background: #ff1e27;
-        }
-
-        h3.section-title {
-            border-left: 4px solid #e50914;
-            padding-left: 12px;
-            margin-top: 10px;
-            color: #f1f1f1;
-            font-size: 20px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .card {
-            background: rgba(34, 34, 34, 0.8);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
-            border-color: rgba(229, 9, 20, 0.5);
-        }
-
-        .card-rating {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.75);
-            color: #ffc107;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 3px 8px;
-            border-radius: 12px;
-            backdrop-filter: blur(4px);
-        }
-
-        .card img {
-            width: 100%;
-            height: 290px;
-            object-fit: cover;
-        }
-
-        .card-info {
-            padding: 15px;
-            text-align: center;
-        }
-
-        .card-info h4 {
-            margin: 0 0 8px 0;
-            font-size: 15px;
-            color: #fff;
-        }
-
-        .card-info span {
-            font-size: 11px;
-            color: #ccc;
-            background: #e50914;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: 500;
-        }
-
-        /* Coming Soon Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            position: relative;
-            width: 85%;
-            max-width: 450px;
-            background: #181818;
-            border: 2px solid #e50914;
-            border-radius: 12px;
-            padding: 40px 20px;
-            text-align: center;
-            box-shadow: 0 0 25px rgba(229, 9, 20, 0.6);
-            animation: modalPop 0.3s ease-out;
-        }
-
-        @keyframes modalPop {
-            0% { transform: scale(0.7); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            color: #fff;
-            font-size: 26px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-btn:hover {
-            color: #e50914;
-        }
-
-        .modal-content h3 {
-            color: #e50914;
-            font-size: 26px;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .modal-content p {
-            color: #ccc;
-            font-size: 14px;
-            margin-top: 5px;
-        }
+        body { font-family: 'Rajdhani', sans-serif; }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .glow-neon { box-shadow: 0 0 15px rgba(0, 255, 204, 0.4); }
+        .text-glow { text-shadow: 0 0 10px rgba(0, 255, 204, 0.6); }
     </style>
 </head>
-<body>
+<body class="bg-cyber-bg text-gray-100 min-h-screen flex flex-col">
 
-    <!-- Loading Screen -->
-    <div id="loader">
-        <div class="anime-spinner"></div>
-        <div class="loading-text">LOADING STREAMVAULT...</div>
-        <div class="loader-creator">Created by Noor ul Hassan</div>
-    </div>
-
-    <!-- Animated Background -->
-    <div class="live-bg"></div>
-    <div class="bg-glow"></div>
-
-    <header>
-        <div class="creator-tag">Created by Noor ul Hassan</div>
-        <h1>STREAMVAULT</h1>
-        <p style="margin: 3px 0 0; color: #aaa; font-size: 13px;">Your Ultimate Movies, Anime & Drama Hub</p>
-        
-        <div class="search-container">
-            <input type="text" id="searchInput" onkeyup="filterContent()" placeholder="Search anime, drama or movies...">
-        </div>
-
-        <div class="category-tabs">
-            <button class="tab-btn active" onclick="filterCategory('all', this)">All</button>
-            <button class="tab-btn" onclick="filterCategory('anime', this)">Anime</button>
-            <button class="tab-btn" onclick="filterCategory('drama', this)">Dramas</button>
-            <button class="tab-btn" onclick="filterCategory('movie', this)">Movies</button>
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-cyber-bg/90 backdrop-blur-md border-b border-cyber-border">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyber-neon to-cyber-purple flex items-center justify-center text-black font-black text-xl glow-neon">
+                    SV
+                </div>
+                <span class="font-orbitron font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon to-cyber-purple text-glow">
+                    STREAM VAULT
+                </span>
+            </div>
         </div>
     </header>
 
-    <div class="container">
-        <!-- Featured Hero Banner -->
-        <div class="hero-banner">
-            <div class="hero-overlay">
-                <div class="badge-trending">FEATURED SHOW</div>
-                <h2>Cyberpunk Chronicles</h2>
-                <p>Enter a futuristic dark city filled with mystery, action, and high-tech adventures.</p>
-                <button class="hero-btn" onclick="openComingSoon('Cyberpunk Chronicles')">Watch Trailer</button>
-            </div>
-        </div>
+    <!-- Main Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        <h2 class="font-orbitron font-bold text-xl text-cyber-neon mb-6">Select Content To Play</h2>
+        <div id="mediaGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5"></div>
+    </main>
 
-        <h3 class="section-title">Trending Content</h3>
-        <div class="grid" id="cardGrid">
-            <!-- Card 1 -->
-            <div class="card" data-category="anime" onclick="openComingSoon('Dark Fantasy Anime')">
-                <div class="card-rating">⭐ 4.9</div>
-                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" alt="Anime">
-                <div class="card-info">
-                    <h4 class="title">Dark Fantasy Anime</h4>
-                    <span>Anime / Action</span>
-                </div>
+    <!-- Video Modal Player -->
+    <div id="playerModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col justify-center items-center p-4">
+        <div class="max-w-4xl w-full flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="modalTitle" class="font-orbitron font-bold text-lg text-cyber-neon"></h3>
+                <button onclick="closePlayerModal()" class="w-10 h-10 bg-cyber-card border border-cyber-border text-gray-300 hover:text-cyber-pink rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
 
-            <!-- Card 2 -->
-            <div class="card" data-category="drama" onclick="openComingSoon('Cyberpunk Chronicles')">
-                <div class="card-rating">⭐ 4.8</div>
-                <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500" alt="Drama">
-                <div class="card-info">
-                    <h4 class="title">Cyberpunk Chronicles</h4>
-                    <span>Drama / Sci-Fi</span>
-                </div>
+            <!-- Reliable Video Container -->
+            <div class="relative aspect-video w-full bg-black rounded-xl overflow-hidden border border-cyber-neon glow-neon">
+                <iframe id="videoIframe" class="w-full h-full absolute inset-0" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
-            <!-- Card 3 -->
-            <div class="card" data-category="anime" onclick="openComingSoon('Lofi Night Vibes')">
-                <div class="card-rating">⭐ 4.7</div>
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500" alt="Anime">
-                <div class="card-info">
-                    <h4 class="title">Lofi Night Vibes</h4>
-                    <span>Anime / Slice of Life</span>
-                </div>
+            <div class="mt-4 bg-cyber-card border border-cyber-border rounded-xl p-4">
+                <p id="modalDescription" class="text-sm text-gray-300"></p>
             </div>
-
-            <!-- Card 4 -->
-            <div class="card" data-category="drama" onclick="openComingSoon('Mysterious Detective Drama')">
-                <div class="card-rating">⭐ 4.9</div>
-                <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=500" alt="Drama">
-                <div class="card-info">
-                    <h4 class="title">Mysterious Detective Drama</h4>
-                    <span>Drama / Mystery</span>
-                </div>
-            </div>
-
-            <!-- Card 5 -->
-            <div class="card" data-category="movie" onclick="openComingSoon('Neon City Nights')">
-                <div class="card-rating">⭐ 4.6</div>
-                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500" alt="Movie">
-                <div class="card-info">
-                    <h4 class="title">Neon City Nights</h4>
-                    <span>Movie / Thriller</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Coming Soon Modal -->
-    <div id="comingSoonModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeComingSoon()">&times;</span>
-            <h3 id="modalMediaTitle">Coming Soon</h3>
-            <p>🎬 This title will be available on StreamVault soon!</p>
-            <p style="font-size: 12px; color: #777; margin-top: 15px;">Stay tuned for full episodes.</p>
         </div>
     </div>
 
     <script>
-        let currentCategory = 'all';
-
-        // Loading screen
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                var loader = document.getElementById('loader');
-                loader.style.opacity = '0';
-                setTimeout(function() {
-                    loader.style.display = 'none';
-                }, 500);
-            }, 1800);
-        });
-
-        // Combined Filter (Search + Category)
-        function filterContent() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.getElementsByClassName('card');
-
-            for (let i = 0; i < cards.length; i++) {
-                let title = cards[i].getElementsByClassName('title')[0].innerText.toLowerCase();
-                let category = cards[i].getAttribute('data-category');
-
-                let matchesSearch = title.includes(input);
-                let matchesCategory = (currentCategory === 'all' || category === currentCategory);
-
-                if (matchesSearch && matchesCategory) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
-                }
+        // Tested & Working Video Embed URLs
+        const mediaCatalog = [
+            {
+                id: 1,
+                title: "Cyberpunk Trailer",
+                category: "Anime",
+                rating: "9.4",
+                image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80",
+                description: "Official Cyberpunk edgerunners streaming video preview.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/JtqIas3bYhg?autoplay=1"
+            },
+            {
+                id: 2,
+                title: "Attack on Titan",
+                category: "Anime",
+                rating: "9.8",
+                image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80",
+                description: "Humanity fights for survival against Titans.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/MGRm4IzK1SQ?autoplay=1"
+            },
+            {
+                id: 3,
+                title: "Sci-Fi Short Film",
+                category: "Drama",
+                rating: "9.1",
+                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80",
+                description: "Futuristic subterranean network hack drama.",
+                videoUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
             }
+        ];
+
+        window.onload = function() {
+            renderMediaGrid();
+        };
+
+        function renderMediaGrid() {
+            const grid = document.getElementById('mediaGrid');
+            grid.innerHTML = mediaCatalog.map(item => `
+                <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden hover:border-cyber-neon transition cursor-pointer" onclick="openPlayerModal(${item.id})">
+                    <div class="relative aspect-[3/4]">
+                        <img src="${item.image}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-full bg-cyber-neon text-black flex items-center justify-center font-bold text-lg glow-neon">
+                                <i class="fa-solid fa-play ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-orbitron font-bold text-sm text-gray-100 truncate">${item.title}</h3>
+                        <span class="text-xs text-cyber-purple font-semibold">${item.category}</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Tab Category Switching
-        function filterCategory(cat, btn) {
-            currentCategory = cat;
-            let buttons = document.getElementsByClassName('tab-btn');
-            for (let b of buttons) {
-                b.classList.remove('active');
-            }
-            btn.classList.add('active');
-            filterContent();
+        function openPlayerModal(id) {
+            const item = mediaCatalog.find(m => m.id === id);
+            if (!item) return;
+
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalDescription').innerText = item.description;
+            
+            // Set Embed URL
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = item.videoUrl;
+
+            document.getElementById('playerModal').classList.remove('hidden');
         }
 
-        // Coming Soon Popup
-        function openComingSoon(title) {
-            document.getElementById('modalMediaTitle').innerText = title;
-            document.getElementById('comingSoonModal').style.display = "flex";
-        }
-
-        function closeComingSoon() {
-            document.getElementById('comingSoonModal').style.display = "none";
+        function closePlayerModal() {
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = ""; // Stop video playback
+            document.getElementById('playerModal').classList.add('hidden');
         }
     </script>
-
 </body>
 </html>
