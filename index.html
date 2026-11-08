@@ -1,19 +1,517 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STREAM VAULT - Ultimate Media Hub</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Orbitron & Inter) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
-    
+    <title>STREAM VAULT | Ultimate Media Hub</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #111827;
+            border-bottom: 1px solid #1f293d;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #00ffcc;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .search-bar {
+            width: 350px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #374151;
+            background: #1f2937;
+            color: #fff;
+            outline: none;
+        }
+
+        .search-bar input:focus {
+            border-color: #00ffcc;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #1f2937;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #374151;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .user-profile:hover {
+            border-color: #00ffcc;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #00ffcc;
+            color: #0b0f19;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            overflow: hidden;
+            border: 2px solid #00ffcc;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-badge {
+            font-size: 10px;
+            color: #00ffcc;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px;
+            width: 100%;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 50%, #004d40 100%);
+            height: 220px;
+            border-radius: 16px;
+            display: flex;
+            align-items: flex-end;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #00ffcc;
+            box-shadow: 0 4px 20px rgba(0, 255, 204, 0.15);
+        }
+
+        .hero-content h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+            color: #00ffcc;
+        }
+
+        .hero-content p {
+            color: #9ca3af;
+            max-width: 600px;
+        }
+
+        /* Filter Tabs */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .filter-btn {
+            background: #1f2937;
+            color: #9ca3af;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: #00ffcc;
+            color: #0b0f19;
+        }
+
+        /* Media Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #111827;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1f293d;
+            transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #00ffcc;
+        }
+
+        .card-img-placeholder {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #00ffcc;
+            position: relative;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #111827;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #00ffcc;
+            position: relative;
+        }
+
+        .video-modal-content {
+            max-width: 700px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 380px;
+            background: #000;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Profile Form */
+        .profile-upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .profile-preview {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #1f2937;
+            border: 3px solid #00ffcc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #00ffcc;
+            overflow: hidden;
+        }
+
+        .profile-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #1f2937;
+            color: #fff;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #00ffcc;
+        }
+
+        .file-input-btn {
+            background: #1f2937;
+            border: 1px dashed #00ffcc;
+            color: #00ffcc;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .save-btn {
+            width: 100%;
+            background: #00ffcc;
+            color: #0b0f19;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #00cca3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">STREAM VAULT</div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search title..." onkeyup="filterCards()">
+        </div>
+        <div class="user-profile" onclick="openProfileModal()">
+            <div class="avatar" id="navAvatar">NH</div>
+            <div class="user-info">
+                <span class="user-name" id="navUserName">Noor ul Hassan</span>
+                <span class="user-badge">VIP Account</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="hero-content">
+                <h1 id="heroWelcome">Welcome Back, Noor!</h1>
+                <p>Select your content below to play instantly.</p>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterCategory('all', this)">All</button>
+            <button class="filter-btn" onclick="filterCategory('anime', this)">Anime</button>
+            <button class="filter-btn" onclick="filterCategory('action', this)">Action</button>
+            <button class="filter-btn" onclick="filterCategory('scifi', this)">Sci-Fi</button>
+        </div>
+
+        <div class="grid" id="mediaGrid"></div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content video-modal-content">
+            <button class="close-btn" onclick="closeVideoModal()">&times;</button>
+            <div style="padding: 15px 20px 0;">
+                <h2 id="modalTitle" style="color: #00ffcc;">Trailer</h2>
+            </div>
+            <div class="video-container" id="videoContainer"></div>
+        </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeProfileModal()">&times;</button>
+            <h2 style="color: #00ffcc; margin-bottom: 10px;">Edit Profile</h2>
+            
+            <div class="profile-upload-area">
+                <div class="profile-preview" id="modalAvatarPreview">NH</div>
+                <label class="file-input-btn">
+                    Choose New Picture
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="previewSelectedImage(event)">
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="nameInput" value="Noor ul Hassan">
+            </div>
+
+            <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+        </div>
+    </div>
+
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-               …
+        const mediaData = [
+            { id: 1, title: "Cyberpunk Trailer", category: "scifi", type: "Sci-Fi", year: "2024", bg: "linear-gradient(45deg, #ff007f, #7928ca)", video: "https://www.youtube.com/embed/LembwKOiWvU" },
+            { id: 2, title: "Attack on Titan", category: "anime", type: "Anime", year: "2023", bg: "linear-gradient(45deg, #0070f3, #00dfd8)", video: "https://www.youtube.com/embed/M_OauHnAFc8" },
+            { id: 3, title: "Sci-Fi Short Film", category: "scifi", type: "Sci-Fi", year: "2024", bg: "linear-gradient(45deg, #ff4d4d, #f9cb28)", video: "https://www.youtube.com/embed/d96cjJhvlMA" },
+            { id: 4, title: "Free Fire Highlights", category: "action", type: "Action", year: "2024", bg: "linear-gradient(45deg, #00c6ff, #0072ff)", video: "https://www.youtube.com/embed/dQw4w9WgXcQ" }
+        ];
+
+        let currentProfileImage = "";
+
+        function renderCards(items) {
+            const grid = document.getElementById('mediaGrid');
+            grid.innerHTML = items.map(item => `
+                <div class="card" onclick="openVideoModal('${item.title}', '${item.video}')">
+                    <div class="card-img-placeholder" style="background: ${item.bg}">
+                        ▶
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title">${item.title}</div>
+                        <div class="card-meta">
+                            <span>${item.type}</span>
+                            <span>${item.year}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if(cat === 'all') {
+                renderCards(mediaData);
+            } else {
+                renderCards(mediaData.filter(x => x.category === cat));
+            }
+        }
+
+        function filterCards() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            renderCards(mediaData.filter(x => x.title.toLowerCase().includes(q)));
+        }
+
+        function openVideoModal(title, videoUrl) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('videoContainer').innerHTML = `<iframe src="${videoUrl}?autoplay=1" allowfullscreen></iframe>`;
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function closeVideoModal() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('videoContainer').innerHTML = '';
+        }
+
+        function openProfileModal() {
+            document.getElementById('profileModal').style.display = 'flex';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function previewSelectedImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentProfileImage = e.target.result;
+                    const preview = document.getElementById('modalAvatarPreview');
+                    preview.innerHTML = `<img src="${currentProfileImage}">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveProfile() {
+            const newName = document.getElementById('nameInput').value.trim();
+            if (newName) {
+                document.getElementById('navUserName').innerText = newName;
+                document.getElementById('heroWelcome').innerText = `Welcome Back, ${newName.split(' ')[0]}!`;
+            }
+
+            if (currentProfileImage) {
+                document.getElementById('navAvatar').innerHTML = `<img src="${currentProfileImage}">`;
+            } else if (newName) {
+                const initials = newName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                document.getElementById('navAvatar').innerText = initials;
+                document.getElementById('modalAvatarPreview').innerText = initials;
+            }
+
+            closeProfileModal();
+        }
+
+        renderCards(mediaData);
+    </script>
+</body>
+</html>
