@@ -3,155 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stream Vault | Working Media Player</title>
+    <title>STREAM VAULT - Ultimate Media Hub</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Orbitron & Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        cyber: {
-                            bg: '#0a0b10',
-                            card: '#12141f',
-                            border: '#1f2438',
-                            neon: '#00ffcc',
-                            purple: '#b026ff',
-                            pink: '#ff007f'
+                        brand: {
+                            cyan: '#00ffcc',
+                            teal: '#00b894',
+                            dark: '#0b0f19',
+                            card: '#121826',
+                            cardHover: '#1a2336',
+                            border: '#1f293d'
                         }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(0, 255, 204, 0.35)',
+                        'glow-sm': '0 0 10px rgba(0, 255, 204, 0.25)',
                     }
                 }
             }
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Rajdhani', sans-serif; }
-        .font-orbitron { font-family: 'Orbitron', sans-serif; }
-        .glow-neon { box-shadow: 0 0 15px rgba(0, 255, 204, 0.4); }
-        .text-glow { text-shadow: 0 0 10px rgba(0, 255, 204, 0.6); }
+        body {
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(18, 24, 38, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-nav {
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 255, 204, 0.15);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f293d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffcc;
+        }
+
+        .glowing-text {
+            text-shadow: 0 0 12px rgba(0, 255, 204, 0.6);
+        }
+
+        .glowing-border {
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+        }
     </style>
 </head>
-<body class="bg-cyber-bg text-gray-100 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-brand-cyan selection:text-black">
 
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-cyber-bg/90 backdrop-blur-md border-b border-cyber-border">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyber-neon to-cyber-purple flex items-center justify-center text-black font-black text-xl glow-neon">
-                    SV
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="filterCategory('all')">
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-cyan to-blue-600 flex items-center justify-center font-orbitron font-extrabold text-slate-950 text-xl shadow-glow">
+                        SV
+                    </div>
+                    <span class="font-orbitron font-black text-2xl tracking-wider text-white glowing-text hidden sm:block">
+                        STREAM <span class="text-brand-cyan">VAULT</span>
+                    </span>
                 </div>
-                <span class="font-orbitron font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyber-neon to-cyber-purple text-glow">
-                    STREAM VAULT
-                </span>
+
+                <!-- Navigation Links (Desktop) -->
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <button onclick="filterCategory('all')" class="nav-link text-brand-cyan hover:text-brand-cyan transition-colors py-2 px-1 border-b-2 border-brand-cyan" data-cat="all">Home</button>
+                    <button onclick="filterCategory('anime')" class="nav-link text-gray-300 hover:text-brand-cyan transition-colors py-2 px-1 border-b-2 border-transparent" data-cat="anime">Anime</button>
+                    <button onclick="filterCategory('sci-fi')" class="nav-link text-gray-300 hover:text-brand-cyan transition-colors py-2 px-1 border-b-2 border-transparent" data-cat="sci-fi">Sci-Fi</button>
+                    <button onclick="filterCategory('action')" class="nav-link text-gray-300 hover:text-brand-cyan transition-colors py-2 px-1 border-b-2 border-transparent" data-cat="action">Action</button>
+                    <button onclick="filterCategory('favs')" class="nav-link text-gray-300 hover:text-brand-cyan transition-colors py-2 px-1 border-b-2 border-transparent flex items-center gap-1.5" data-cat="favs">
+                        <i class="fa-solid fa-bookmark text-brand-cyan text-xs"></i> Favorites
+                    </button>
+                </nav>
+
+                <!-- Search Bar & User Actions -->
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search vault..." 
+                            class="w-40 sm:w-64 bg-brand-card/90 border border-brand-border rounded-full py-2 pl-10 pr-4 text-xs sm:text-sm text-gray-200 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    </div>
+
+                    <!-- User Avatar -->
+                    <button class="w-10 h-10 rounded-full border border-brand-cyan/40 p-0.5 hover:border-brand-cyan transition-all">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="w-full h-full rounded-full object-cover">
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Grid -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
-        <h2 class="font-orbitron font-bold text-xl text-cyber-neon mb-6">Select Content To Play</h2>
-        <div id="mediaGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5"></div>
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- Featured Banner Hero Section -->
+        <section class="relative rounded-3xl overflow-hidden glass border border-brand-border group">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/60 to-transparent z-10"></div>
+            <img id="heroBg" src="https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=80" alt="Featured" class="w-full h-72 sm:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-700">
+            
+            <div class="absolute bottom-0 left-0 z-20 p-6 sm:p-10 max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cyan/20 border border-brand-cyan/40 text-brand-cyan text-xs font-semibold uppercase tracking-wider mb-3">
+                    <span class="w-2 h-2 rounded-full bg-brand-cyan animate-ping"></span> Featured Release
+                </div>
+                <h1 id="heroTitle" class="font-orbitron font-extrabold text-2xl sm:text-4xl text-white mb-2 tracking-wide">
+                    CYBERPUNK: NEO CITY 2099
+                </h1>
+                <p id="heroDesc" class="text-xs sm:text-sm text-gray-300 line-clamp-2 sm:line-clamp-3 mb-5 font-normal">
+                    Step into the glowing neon underground of Neo City. Follow rogue netrunners fighting against corporate megastructures in this thrilling futuristic masterpiece.
+                </p>
+                <div class="flex items-center gap-4">
+                    <button onclick="playHeroMedia()" class="px-6 py-3 rounded-xl bg-brand-cyan text-slate-950 font-orbitron font-bold text-xs sm:text-sm flex items-center gap-2 hover:bg-white hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-play text-slate-950"></i> WATCH TRAILER
+                    </button>
+                    <button onclick="toggleHeroFav()" class="p-3 rounded-xl bg-brand-card/80 border border-brand-border text-gray-300 hover:text-brand-cyan hover:border-brand-cyan transition-all">
+                        <i id="heroFavIcon" class="fa-regular fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories & Filter Tabs -->
+        <section class="flex flex-wrap items-center justify-between gap-4 border-b border-brand-border pb-4">
+            <h2 class="font-orbitron text-xl font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-film text-brand-cyan"></i> SELECT CONTENT
+            </h2>
+            
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none">
+                <button onclick="filterCategory('all')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand-cyan text-slate-950 shadow-glow-sm transition-all" data-cat="all">All Vault</button>
+                <button onclick="filterCategory('anime')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand-card text-gray-400 hover:text-white hover:bg-brand-cardHover border border-brand-border transition-all" data-cat="anime">Anime</button>
+                <button onclick="filterCategory('sci-fi')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand-card text-gray-400 hover:text-white hover:bg-brand-cardHover border border-brand-border transition-all" data-cat="sci-fi">Sci-Fi</button>
+                <button onclick="filterCategory('action')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand-card text-gray-400 hover:text-white hover:bg-brand-cardHover border border-brand-border transition-all" data-cat="action">Action</button>
+                <button onclick="filterCategory('drama')" class="cat-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand-card text-gray-400 hover:text-white hover:bg-brand-cardHover border border-brand-border transition-all" data-cat="drama">Drama</button>
+            </div>
+        </section>
+
+        <!-- Media Grid -->
+        <section>
+            <div id="mediaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Dynamic cards injected via JavaScript -->
+            </div>
+            
+            <!-- Empty state -->
+            <div id="emptyState" class="hidden text-center py-16 space-y-3">
+                <i class="fa-solid fa-ghost text-5xl text-gray-600"></i>
+                <p class="text-gray-400 font-medium text-base">No streaming media found matching your selection.</p>
+                <button onclick="filterCategory('all')" class="text-xs text-brand-cyan underline hover:text-white">Reset Filters</button>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Video Modal Player -->
-    <div id="playerModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-md hidden flex flex-col justify-center items-center p-4">
-        <div class="max-w-4xl w-full flex flex-col">
-            <div class="flex items-center justify-between mb-4">
-                <h3 id="modalTitle" class="font-orbitron font-bold text-lg text-cyber-neon"></h3>
-                <button onclick="closePlayerModal()" class="w-10 h-10 bg-cyber-card border border-cyber-border text-gray-300 hover:text-cyber-pink rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-brand-border bg-brand-dark/80 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center sm:flex sm:justify-between sm:items-center space-y-4 sm:space-y-0">
+            <div class="flex items-center justify-center gap-2 font-orbitron text-sm font-bold">
+                <span class="w-6 h-6 rounded-md bg-brand-cyan text-slate-950 flex items-center justify-center text-xs">SV</span>
+                STREAM <span class="text-brand-cyan">VAULT</span>
+            </div>
+            <p class="text-xs text-gray-500">© 2026 STREAM VAULT Media Hub. Designed for High Quality Streaming.</p>
+        </div>
+    </footer>
+
+    <!-- Video Player Modal Showcase -->
+    <div id="videoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md hidden transition-opacity duration-300 opacity-0">
+        <div class="relative w-full max-w-4xl bg-brand-card rounded-2xl border border-brand-cyan/30 shadow-2xl overflow-hidden flex flex-col">
+            
+            <!-- Modal Header -->
+            <div class="p-4 bg-brand-dark flex items-center justify-between border-b border-brand-border">
+                <div class="flex items-center gap-3">
+                    <span id="modalCategoryBadge" class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/40">ANIME</span>
+                    <h3 id="modalTitle" class="font-orbitron font-bold text-base sm:text-lg text-white">Media Title</h3>
+                </div>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-brand-cardHover text-gray-400 hover:text-white hover:bg-red-500/20 transition-all flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <!-- Reliable Video Container -->
-            <div class="relative aspect-video w-full bg-black rounded-xl overflow-hidden border border-cyber-neon glow-neon">
-                <iframe id="videoIframe" class="w-full h-full absolute inset-0" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <!-- Video Player Screen -->
+            <div class="relative w-full aspect-video bg-black flex items-center justify-center group overflow-hidden">
+                <iframe id="modalIframe" class="w-full h-full" src="" title="Video Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
-            <div class="mt-4 bg-cyber-card border border-cyber-border rounded-xl p-4">
-                <p id="modalDescription" class="text-sm text-gray-300"></p>
+            <!-- Modal Details Body -->
+            <div class="p-6 bg-brand-card space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-4 text-xs text-gray-400 border-b border-brand-border/60 pb-3">
+                    <div class="flex items-center gap-4">
+                        <span class="flex items-center gap-1 text-yellow-400 font-bold"><i class="fa-solid fa-star"></i> <span id="modalRating">4.9</span></span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-eye text-brand-cyan"></i> <span id="modalViews">120K views</span></span>
+                        <span class="flex items-center gap-1"><i class="fa-solid fa-clock text-gray-400"></i> <span id="modalDuration">2m 45s</span></span>
+                    </div>
+                    <button id="modalFavBtn" onclick="toggleModalFav()" class="flex items-center gap-1.5 text-gray-300 hover:text-brand-cyan transition-colors">
+                        <i class="fa-regular fa-bookmark"></i> Add to Favorites
+                    </button>
+                </div>
+                <p id="modalDescription" class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                    Detailed media breakdown description goes here...
+                </p>
             </div>
         </div>
     </div>
 
+    <!-- JavaScript Data & Interactivity -->
     <script>
-        // Tested & Working Video Embed URLs
-        const mediaCatalog = [
+        // Media Vault Catalog Data
+        const mediaVault = [
             {
                 id: 1,
                 title: "Cyberpunk Trailer",
-                category: "Anime",
-                rating: "9.4",
-                image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=600&q=80",
-                description: "Official Cyberpunk edgerunners streaming video preview.",
-                videoUrl: "https://www.youtube-nocookie.com/embed/JtqIas3bYhg?autoplay=1"
+                category: "anime",
+                genreLabel: "Anime / Sci-Fi",
+                rating: "4.9",
+                views: "245K",
+                duration: "3m 12s",
+                thumbnail: "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/LembwKOiWvU?autoplay=1",
+                description: "Experience high-octane futuristic action set in a neon-drenched metropolis where technology and humanity collide.",
+                isFavorite: false
             },
             {
                 id: 2,
                 title: "Attack on Titan",
-                category: "Anime",
-                rating: "9.8",
-                image: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=600&q=80",
-                description: "Humanity fights for survival against Titans.",
-                videoUrl: "https://www.youtube-nocookie.com/embed/MGRm4IzK1SQ?autoplay=1"
+                category: "anime",
+                genreLabel: "Anime / Action",
+                rating: "4.9",
+                views: "890K",
+                duration: "1m 48s",
+                thumbnail: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/M_OauHnAFc8?autoplay=1",
+                description: "Humanity fights for survival against gigantic humanoid titans behind colossal walls. Epic battle sequence showcase.",
+                isFavorite: true
             },
             {
                 id: 3,
                 title: "Sci-Fi Short Film",
-                category: "Drama",
-                rating: "9.1",
-                image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80",
-                description: "Futuristic subterranean network hack drama.",
-                videoUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
+                category: "sci-fi",
+                genreLabel: "Drama / Sci-Fi",
+                rating: "4.7",
+                views: "112K",
+                duration: "4m 05s",
+                thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/d96cjJhvlMA?autoplay=1",
+                description: "A mysterious alien signal strikes a deep-space research vessel near Saturn's rings, revealing ancient tech.",
+                isFavorite: false
+            },
+            {
+                id: 4,
+                title: "Neo Cyber City 2099",
+                category: "sci-fi",
+                genreLabel: "Sci-Fi / Action",
+                rating: "4.8",
+                views: "310K",
+                duration: "2m 30s",
+                thumbnail: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/LembwKOiWvU?autoplay=1",
+                description: "Explore the dark corridors and towering skyscrapers of the synthwave cyberpunk capital.",
+                isFavorite: false
+            },
+            {
+                id: 5,
+                title: "Shadow Blade Samurai",
+                category: "action",
+                genreLabel: "Action / Anime",
+                rating: "4.6",
+                views: "75K",
+                duration: "2m 15s",
+                thumbnail: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/M_OauHnAFc8?autoplay=1",
+                description: "A lone swordsman walks through cherry blossom ruins seeking vengeance against shadowy warlords.",
+                isFavorite: false
+            },
+            {
+                id: 6,
+                title: "Interstellar Horizon",
+                category: "sci-fi",
+                genreLabel: "Sci-Fi / Drama",
+                rating: "4.9",
+                views: "520K",
+                duration: "3m 40s",
+                thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/d96cjJhvlMA?autoplay=1",
+                description: "Traversing wormholes in search of a habitable home world before Earth's final countdown.",
+                isFavorite: false
+            },
+            {
+                id: 7,
+                title: "Demon Slayer Chronicles",
+                category: "anime",
+                genreLabel: "Anime / Action",
+                rating: "5.0",
+                views: "980K",
+                duration: "2m 55s",
+                thumbnail: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/M_OauHnAFc8?autoplay=1",
+                description: "Breathtaking elemental sword techniques unleashed against moonlight demons in feudal Japan.",
+                isFavorite: true
+            },
+            {
+                id: 8,
+                title: "The Lost Protocol",
+                category: "drama",
+                genreLabel: "Drama / Thriller",
+                rating: "4.5",
+                views: "64K",
+                duration: "3m 10s",
+                thumbnail: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube-nocookie.com/embed/LembwKOiWvU?autoplay=1",
+                description: "A rogue AI engineer uncovers corruption at the core of the planetary defense mainframe.",
+                isFavorite: false
             }
         ];
 
+        let currentCategory = 'all';
+        let activeModalMediaId = null;
+
+        // Render Media Items
+        function renderMediaGrid() {
+            const grid = document.getElementById('mediaGrid');
+            const emptyState = document.getElementById('emptyState');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            grid.innerHTML = '';
+
+            const filtered = mediaVault.filter(item => {
+                const matchesCat = currentCategory === 'all' || 
+                                   (currentCategory === 'favs' ? item.isFavorite : item.category === currentCategory);
+                const matchesSearch = item.title.toLowerCase().includes(searchVal) || 
+                                      item.genreLabel.toLowerCase().includes(searchVal);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                filtered.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = "group relative bg-brand-card rounded-2xl border border-brand-border overflow-hidden hover:border-brand-cyan/60 hover:shadow-glow-sm transition-all duration-300 flex flex-col";
+                    
+                    card.innerHTML = `
+                        <!-- Thumbnail Wrapper -->
+                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-900 cursor-pointer" onclick="openModal(${item.id})">
+                            <img src="${item.thumbnail}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-brand-card via-transparent to-black/30"></div>
+                            
+                            <!-- Category Badge -->
+                            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wide bg-brand-dark/80 text-brand-cyan border border-brand-cyan/30 backdrop-blur-sm">
+                                ${item.category}
+                            </span>
+
+                            <!-- Play Overlay Button -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-12 h-12 rounded-full bg-brand-cyan/90 text-slate-950 flex items-center justify-center transform scale-90 opacity-90 group-hover:scale-110 group-hover:opacity-100 group-hover:bg-brand-cyan transition-all duration-300 shadow-glow">
+                                    <i class="fa-solid fa-play text-lg ml-0.5"></i>
+                                </div>
+                            </div>
+
+                            <!-- Duration Badge -->
+                            <span class="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/80 text-[10px] font-medium text-gray-300">
+                                ${item.duration}
+                            </span>
+                        </div>
+
+                        <!-- Card Meta Info -->
+                        <div class="p-4 flex flex-col flex-grow justify-between space-y-3">
+                            <div>
+                                <h3 class="font-orbitron font-semibold text-white text-sm group-hover:text-brand-cyan transition-colors line-clamp-1 cursor-pointer" onclick="openModal(${item.id})">
+                                    ${item.title}
+                                </h3>
+                                <p class="text-xs text-gray-400 mt-1">${item.genreLabel}</p>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs text-gray-400 border-t border-brand-border/60 pt-3">
+                                <div class="flex items-center gap-3">
+                                    <span class="flex items-center gap-1 text-yellow-400 font-semibold">
+                                        <i class="fa-solid fa-star text-[10px]"></i> ${item.rating}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <i class="fa-solid fa-eye text-[10px] text-brand-cyan"></i> ${item.views}
+                                    </span>
+                                </div>
+                                <button onclick="toggleFav(event, ${item.id})" class="p-1.5 hover:text-brand-cyan transition-colors text-gray-400">
+                                    <i class="${item.isFavorite ? 'fa-solid text-brand-cyan' : 'fa-regular'} fa-bookmark text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // Category Filter Switching
+        function filterCategory(cat) {
+            currentCategory = cat;
+
+            // Update Header Nav Links
+            document.querySelectorAll('.nav-link').forEach(btn => {
+                if(btn.dataset.cat === cat) {
+                    btn.classList.add('text-brand-cyan', 'border-brand-cyan');
+                    btn.classList.remove('text-gray-300', 'border-transparent');
+                } else {
+                    btn.classList.remove('text-brand-cyan', 'border-brand-cyan');
+                    btn.classList.add('text-gray-300', 'border-transparent');
+                }
+            });
+
+            // Update Tab Buttons
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.dataset.cat === cat) {
+                    btn.className = "cat-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand-cyan text-slate-950 shadow-glow-sm transition-all";
+                } else {
+                    btn.className = "cat-btn px-4 py-1.5 rounded-lg text-xs font-semibold bg-brand-card text-gray-400 hover:text-white hover:bg-brand-cardHover border border-brand-border transition-all";
+                }
+            });
+
+            renderMediaGrid();
+        }
+
+        // Handle Search Input
+        function handleSearch() {
+            renderMediaGrid();
+        }
+
+        // Toggle Favorite Bookmark
+        function toggleFav(e, id) {
+            e.stopPropagation();
+            const item = mediaVault.find(m => m.id === id);
+            if(item) {
+                item.isFavorite = !item.isFavorite;
+                renderMediaGrid();
+                if(activeModalMediaId === id) {
+                    updateModalFavBtn(item.isFavorite);
+                }
+            }
+        }
+
+        // Hero Play Button Action
+        function playHeroMedia() {
+            openModal(1);
+        }
+
+        // Hero Favorite Action
+        function toggleHeroFav() {
+            toggleFav(new Event('click'), 1);
+            const item = mediaVault.find(m => m.id === 1);
+            const icon = document.getElementById('heroFavIcon');
+            if(item.isFavorite) {
+                icon.className = "fa-solid fa-bookmark text-brand-cyan";
+            } else {
+                icon.className = "fa-regular fa-bookmark";
+            }
+        }
+
+        // Modal Controls
+        function openModal(id) {
+            const item = mediaVault.find(m => m.id === id);
+            if(!item) return;
+
+            activeModalMediaId = id;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalCategoryBadge').textContent = item.category.toUpperCase();
+            document.getElementById('modalRating').textContent = item.rating;
+            document.getElementById('modalViews').textContent = item.views + ' views';
+            document.getElementById('modalDuration').textContent = item.duration;
+            document.getElementById('modalDescription').textContent = item.description;
+            document.getElementById('modalIframe').src = item.videoUrl;
+
+            updateModalFavBtn(item.isFavorite);
+
+            const modal = document.getElementById('videoModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('modalIframe').src = "";
+                activeModalMediaId = null;
+            }, 300);
+        }
+
+        function toggleModalFav() {
+            if(activeModalMediaId) {
+                toggleFav(new Event('click'), activeModalMediaId);
+            }
+        }
+
+        function updateModalFavBtn(isFav) {
+            const btn = document.getElementById('modalFavBtn');
+            if(isFav) {
+                btn.innerHTML = `<i class="fa-solid fa-bookmark text-brand-cyan"></i> Favorited`;
+                btn.classList.add('text-brand-cyan');
+            } else {
+                btn.innerHTML = `<i class="fa-regular fa-bookmark"></i> Add to Favorites`;
+                btn.classList.remove('text-brand-cyan');
+            }
+        }
+
+        // Close Modal on Background Click
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if(e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize App
         window.onload = function() {
             renderMediaGrid();
         };
-
-        function renderMediaGrid() {
-            const grid = document.getElementById('mediaGrid');
-            grid.innerHTML = mediaCatalog.map(item => `
-                <div class="bg-cyber-card border border-cyber-border rounded-xl overflow-hidden hover:border-cyber-neon transition cursor-pointer" onclick="openPlayerModal(${item.id})">
-                    <div class="relative aspect-[3/4]">
-                        <img src="${item.image}" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-                            <div class="w-12 h-12 rounded-full bg-cyber-neon text-black flex items-center justify-center font-bold text-lg glow-neon">
-                                <i class="fa-solid fa-play ml-1"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-3">
-                        <h3 class="font-orbitron font-bold text-sm text-gray-100 truncate">${item.title}</h3>
-                        <span class="text-xs text-cyber-purple font-semibold">${item.category}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openPlayerModal(id) {
-            const item = mediaCatalog.find(m => m.id === id);
-            if (!item) return;
-
-            document.getElementById('modalTitle').innerText = item.title;
-            document.getElementById('modalDescription').innerText = item.description;
-            
-            // Set Embed URL
-            const iframe = document.getElementById('videoIframe');
-            iframe.src = item.videoUrl;
-
-            document.getElementById('playerModal').classList.remove('hidden');
-        }
-
-        function closePlayerModal() {
-            const iframe = document.getElementById('videoIframe');
-            iframe.src = ""; // Stop video playback
-            document.getElementById('playerModal').classList.add('hidden');
-        }
     </script>
 </body>
 </html>
